@@ -21,10 +21,40 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
+  const [enrollment, setEnrollment] = useState(null);
+  const [checkingEnrollment, setCheckingEnrollment] = useState(false);
 
   useEffect(() => {
     fetchCourseDetails();
   }, [id]);
+
+  // Check if user is already enrolled in this course
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (!user || !course) return;
+      try {
+        setCheckingEnrollment(true);
+        const response = await enrollmentAPI.getMyCourses(
+          user?.uid || null,
+          user?.email || null,
+          "active"
+        );
+        const myEnrollments = response.data || [];
+        const found = myEnrollments.find(
+          (en) => en.course?._id === course._id
+        );
+        if (found) {
+          setEnrollment(found);
+        }
+      } catch (error) {
+        console.error("Failed to check enrollment:", error);
+      } finally {
+        setCheckingEnrollment(false);
+      }
+    };
+
+    checkEnrollment();
+  }, [user, course]);
 
   const fetchCourseDetails = async () => {
     try {
@@ -44,6 +74,12 @@ const CourseDetails = () => {
     if (!user) {
       toast.error("Please log in to enroll in this course");
       navigate("/login");
+      return;
+    }
+
+    // If already enrolled, take user to dashboard
+    if (enrollment) {
+      navigate("/dashboard");
       return;
     }
 
@@ -252,10 +288,14 @@ const CourseDetails = () => {
 
               <button
                 onClick={handleEnroll}
-                disabled={enrolling}
+                disabled={enrolling || checkingEnrollment}
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
               >
-                {enrolling ? "Enrolling..." : "Enroll Now"}
+                {enrolling
+                  ? "Enrolling..."
+                  : enrollment
+                  ? "Go to Dashboard"
+                  : "Enroll Now"}
               </button>
 
               <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
