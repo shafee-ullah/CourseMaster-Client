@@ -1,68 +1,179 @@
+@import url("https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap");
+@import "tailwindcss";
+@plugin "daisyui";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------- */
+/* 1. THEME VARIABLES (Red and White) */
+/* ---------------------------------------------------- */
+
+/* Base (light) theme: RED and WHITE */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --bg-color: #ffffff; /* White background */
+  --text-color: #000000;
+  --primary-color: #ffffff; /* Card/secondary background */
+  --btn-primary: #dc2626; /* A strong red (Tailwind red-600) */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Dark theme: RED and DARK */
+:root.dark {
+  --bg-gradient-from: #0f172a; /* Slate-900 */
+  --bg-gradient-via: #0f172a;
+  --bg-gradient-to: rgba(185, 28, 28, 0.1); /* Red accent glow */
+  --text-color: #ffffff;
+  --primary-color: #1f2937; /* Darker secondary background */
+  --btn-primary: #dc2626; /* A strong red (Tailwind red-600) */
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+/* Dark mode background gradient application */
+:root.dark body {
+  background: linear-gradient(
+    to bottom right,
+    var(--bg-gradient-from),
+    var(--bg-gradient-via),
+    var(--bg-gradient-to)
+  );
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ---------------------------------------------------- */
+/* 2. BASE STYLES & FONT */
+/* ---------------------------------------------------- */
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Arimo", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* ---------------------------------------------------- */
+/* GLOBAL LAYOUT WRAPPER - All content must be wrapped */
+/* ---------------------------------------------------- */
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Global container wrapper for all website content */
+.app-container {
+  width: 91.666667%; /* w-11/12 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------------------------------------------------- */
+/* 3. ROUNDED BUTTONS (2XL) & ACTIVE STATE */
+/* ---------------------------------------------------- */
+
+/* APPLY ROUNDED-2XL TO ALL BUTTONS AND DAISYUI BUTTON CLASSES */
+/* Note: Tailwind utility classes in your components will override this,
+   but this ensures all base buttons have a default curve. */
+button,
+.btn,
+input[type="submit"],
+input[type="button"] {
+  border-radius: 1.5rem !important; /* 24px, equivalent to Tailwind's rounded-2xl */
+}
+
+.active {
+  color: var(--text-color);
+  border-bottom: 2px solid var(--btn-primary); /* Red active border */
+}
+
+/* ---------------------------------------------------- */
+/* 4. CUSTOM ANIMATED LOGIN BUTTON */
+/* ---------------------------------------------------- */
+
+.login-button {
+  position: relative;
+  padding: 10px 20px;
+  color: var(--btn-primary); /* Now red */
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+/* Span 1: Top Border (Red Gradient) */
+.login-button span:nth-child(1) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #171618, #dc2626); /* Red */
+  animation: animate1 2s linear infinite;
+}
+
+@keyframes animate1 {
+  0% {
+    transform: translateX(-100%);
   }
-  a:hover {
-    color: #747bff;
+  100% {
+    transform: translateX(100%);
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+/* Span 2: Right Border (Red Gradient) */
+.login-button span:nth-child(2) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(to bottom, #171618, #dc2626); /* Red */
+  animation: animate2 2s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes animate2 {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Span 3: Bottom Border (Red Gradient) */
+.login-button span:nth-child(3) {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to left, #171618, #dc2626); /* Red */
+  animation: animate3 2s linear infinite;
+}
+
+@keyframes animate3 {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Span 4: Left Border (Red Gradient) */
+.login-button span:nth-child(4) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(to top, #171618, #dc2626); /* Red */
+  animation: animate4 2s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes animate4 {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-100%);
   }
 }

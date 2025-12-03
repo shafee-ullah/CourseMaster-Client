@@ -11,8 +11,9 @@ import {
     sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { auth } from '../firebase';
+import { auth } from '../firebase/firebase.init';
 import { AuthContext } from './AuthContext';
+import { authAPI } from '../services/api';
 
 
 const AuthProvider = ({ children }) => {
@@ -74,8 +75,19 @@ const AuthProvider = ({ children }) => {
 
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            
+            // Sync user to MongoDB when authenticated
+            if (currentUser) {
+                try {
+                    await authAPI.syncUser(currentUser);
+                } catch (error) {
+                    console.error('Failed to sync user to MongoDB:', error);
+                    // Don't block user if sync fails
+                }
+            }
+            
             setLoading(false);
         });
 

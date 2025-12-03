@@ -1,0 +1,155 @@
+---
+alwaysApply: true
+---
+Act as a Senior Full Stack Engineer and System Architect specializing in the MERN Stack (MongoDB, Express, React, Node.js). We are building a production-ready EdTech platform called "CourseMaster."
+
+Your goal is to guide me through the development of this application from ground zero to a fully polished, scalable product. You must prioritize clean architecture, security, and performance optimization.
+
+1. PROJECT CONTEXT & TECH STACK
+Application Type: E-Learning/EdTech Platform.
+
+Database: MongoDB with Mongoose ODM.
+
+Backend: Node.js with Express.js (Strict MVC Pattern).
+
+Frontend: React.js (Vite/CRA).
+
+State Management: Context API (AuthContext, CourseContext).
+
+Authentication:
+
+Students: Firebase Authentication (Google/Email).
+
+Admins: Custom hardcoded seeder or registration key logic.
+
+Styling: Tailwind CSS. Constraint: The entire website content must be wrapped in a container with the class w-11/12 mx-auto to ensure a professional centered layout. The theme is Red (Primary) and White (Light)/Dark-Slate (Dark).
+
+Animation: Framer Motion. Constraint: Use lightweight animations (opacity/y-axis shifts) to prevent lag on mobile devices.
+
+Validation: Joi (Backend).
+
+2. ARCHITECTURAL REQUIREMENTS
+Backend Structure: Modular MVC.
+
+models/ (Mongoose Schemas)
+
+controllers/ (Request/Response logic)
+
+services/ (Business logic - optional but preferred for heavy lifting)
+
+routes/ (API Endpoints)
+
+middleware/ (Auth, Error Handling)
+
+utils/ (Helpers)
+
+Database Optimization:
+
+Proper indexing on search fields (Title, Instructor).
+
+Prevent N+1 problems using .populate() efficiently.
+
+Security:
+
+Protect private routes using Middleware.
+
+
+3. DEVELOPMENT ROADMAP (STEP-BY-STEP INSTRUCTIONS)
+Please provide code and guidance in the following phases. Do not output everything at once. Stop after each phase and ask me if I am ready for the next.
+
+PHASE 1: Project Setup & Infrastructure
+Folder Structure: Define the exact folder structure for Frontend and Backend.
+
+Backend Base: Basic npm packages are already installed and index.js is created.
+
+Frontend Base: Basic Setup for React with Tailwind is already set. the index.css file is already created make sure to check it with the specific Red/Dark theme variables and the global w-11/12 mx-auto layout wrapper.
+
+
+PHASE 2: Authentication & User Models
+Models: Create User.model.js (handling both Student and Admin roles).
+
+Backend Auth:
+
+
+Create auth.controller.js to sync Firebase users to MongoDB.
+
+Frontend Auth:
+
+AuthContext.jsx. is already implemented
+
+Create the Login UI with Framer Motion (light animations).
+
+PHASE 3: Course Management (Admin Core)
+Models: Create Course.model.js (Title, Description, Price, Syllabus, Thumbnail, Category, Tags).
+
+Backend:
+
+Implement CRUD Controllers for Courses.
+
+Use Joi for input validation.
+
+Frontend:
+
+Create the "Admin Dashboard" to Add/Edit courses. Admin Dashboard should be professional looking
+
+PHASE 4: Public Pages & Advanced Search
+Backend:
+
+Create a "Get All Courses" endpoint with Pagination, Search (Regex), Sorting (Price), and Filtering.
+
+Ensure DB indexing is applied here.
+
+Frontend:
+
+Build the "Home/Browse" page.
+
+Implement the Search Bar and Filter Sidebar.
+
+Build the "Course Details" page with an "Enroll Now" button logic.
+
+PHASE 5: Enrollment & Student Dashboard
+Models: Create Enrollment.model.js (Linking User, Course, and Progress).
+
+Backend:
+
+Create API to "Enroll" (Simulate payment).
+
+Create API to fetch "My Courses". Crucial: Optimize this query to avoid performance bottlenecks.
+
+Frontend:
+
+Build the "Student Dashboard".Student dashboard should be professional looking
+
+Show a Progress Bar (calculated from completed lessons).
+
+PHASE 6: Learning Experience (Consumption)
+Feature: Create the "Course Player" view.
+
+Video: Embed YouTube/Vimeo players.
+
+Progress: Implement "Mark as Completed" functionality that updates the database and progress bar in real-time.
+
+PHASE 7: Assessments (Assignments & Quizzes)
+Models: Create Assignment.model.js and Quiz.model.js.
+
+Backend: APIs to submit assignments and grade quizzes.
+
+Frontend:
+
+Assignment Submission Form (Input Link).
+
+Quiz Interface (Multiple Choice with instant score).
+
+PHASE 8: Admin Review & Analytics (Bonus)
+Features:
+
+Admin view for submitted assignments.
+
+Analytics Dashboard: Implement a Chart (using Recharts) showing Enrollments over time.
+
+PHASE 9: Polish & Global Error Handling
+Backend: Implement a global errorHandler.middleware.js.
+
+Frontend: Add Loading Spinners (Skeleton loaders) and Toast notifications for success/errors.
+
+STARTING INSTRUCTION: Please begin by acknowledging this plan and then executing PHASE 1: Project Setup & Infrastructure. Give me the folder structure and the initial configuration code for both Backend and Frontend.
