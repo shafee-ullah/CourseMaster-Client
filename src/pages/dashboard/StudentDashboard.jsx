@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../context/AuthContext";
 import { enrollmentAPI } from "../../services/api";
@@ -16,6 +16,7 @@ import {
 
 const StudentDashboard = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("active"); // active, completed
@@ -272,7 +273,14 @@ const StudentDashboard = () => {
                       </div>
                     </div>
 
-                    <button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigate(`/player/${enrollment._id}`);
+                      }}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors"
+                    >
                       {enrollment.status === "completed"
                         ? "Review Course"
                         : "Continue Learning"}

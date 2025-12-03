@@ -156,16 +156,16 @@ export const enrollmentAPI = {
    * @param {string} firebaseUID - Firebase UID for auth
    * @returns {Promise}
    */
-  enroll: async (courseId, firebaseUID) => {
-    const response = await api.post(
-      "/enrollments",
-      { courseId },
-      {
-        headers: {
-          "x-firebase-uid": firebaseUID,
-        },
-      }
-    );
+  enroll: async (courseId, firebaseUID, email) => {
+    const headers = {};
+
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+
+    const response = await api.post("/enrollments", { courseId }, { headers });
     return response.data;
   },
 
