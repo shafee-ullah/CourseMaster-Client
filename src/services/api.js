@@ -261,6 +261,174 @@ export const enrollmentAPI = {
     );
     return response.data;
   },
+
+  /**
+   * Admin: Get enrollment analytics (enrollments over time)
+   */
+  getEnrollmentAnalytics: async (firebaseUID, email, rangeDays = 30) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get("/enrollments/admin/analytics", {
+      params: { rangeDays },
+      headers,
+    });
+    return response.data;
+  },
+};
+
+/**
+ * Quiz API Service
+ * Handles quiz creation, retrieval, and submissions
+ */
+export const quizAPI = {
+  /**
+   * Create a quiz (admin)
+   * @param {Object} quizData
+   * @param {string} firebaseUID
+   * @param {string} email
+   */
+  createQuiz: async (quizData, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.post("/quizzes", quizData, { headers });
+    return response.data;
+  },
+
+  /**
+   * Get quizzes for a course (student)
+   */
+  getQuizzesByCourse: async (courseId, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get(`/quizzes/course/${courseId}`, { headers });
+    return response.data;
+  },
+
+  /**
+   * Get single quiz by ID
+   */
+  getQuizById: async (quizId, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get(`/quizzes/${quizId}`, { headers });
+    return response.data;
+  },
+
+  /**
+   * Submit quiz answers
+   */
+  submitQuiz: async (quizId, answers, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.post(
+      `/quizzes/${quizId}/submit`,
+      { answers },
+      { headers }
+    );
+    return response.data;
+  },
+
+  /**
+   * Update a quiz (admin)
+   */
+  updateQuiz: async (quizId, quizData, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.put(`/quizzes/${quizId}`, quizData, { headers });
+    return response.data;
+  },
+
+  /**
+   * Delete a quiz (admin)
+   */
+  deleteQuiz: async (quizId, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.delete(`/quizzes/${quizId}`, { headers });
+    return response.data;
+  },
+
+  /**
+   * Get student's quiz results
+   */
+  getMyResults: async (firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get("/quizzes/my/results", { headers });
+    return response.data;
+  },
+};
+
+/**
+ * Assignment API Service
+ * Handles assignment submissions and retrieval
+ */
+export const assignmentAPI = {
+  submitAssignment: async (data, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.post("/assignments", data, { headers });
+    return response.data;
+  },
+
+  getMyAssignments: async (firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get("/assignments/my", { headers });
+    return response.data;
+  },
+
+  // Admin: get all submitted assignments
+  getAllAssignmentsAdmin: async (firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get("/assignments/admin/all", { headers });
+    return response.data;
+  },
 };
 
 export default api;

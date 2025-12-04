@@ -11,16 +11,25 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
     tags: "",
     status: "draft",
     syllabus: [],
+    batches: [],
   });
 
   const [lessonForm, setLessonForm] = useState({
     lessonTitle: "",
     lessonDescription: "",
     videoUrl: "",
-    duration: 0,
+    duration: "",
     order: 1,
   });
 
+  const [batchForm, setBatchForm] = useState({
+    batchName: "",
+    startDate: "",
+    endDate: "",
+    isActive: true,
+  });
+
+  // Initialize form data from course prop (when editing)
   useEffect(() => {
     if (course) {
       setFormData({
@@ -32,6 +41,7 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
         tags: course.tags ? course.tags.join(", ") : "",
         status: course.status || "draft",
         syllabus: course.syllabus || [],
+        batches: course.batches || [],
       });
     }
   }, [course]);
@@ -48,7 +58,22 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
     const { name, value } = e.target;
     setLessonForm({
       ...lessonForm,
-      [name]: name === "duration" || name === "order" ? Number(value) : value,
+      [name]:
+        name === "order"
+          ? Number(value)
+          : name === "duration"
+          ? value === ""
+            ? ""
+            : Number(value)
+          : value,
+    });
+  };
+
+  const handleBatchChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setBatchForm({
+      ...batchForm,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -60,6 +85,7 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
 
     const newLesson = {
       ...lessonForm,
+      duration: lessonForm.duration === "" ? 0 : Number(lessonForm.duration),
       order: formData.syllabus.length + 1,
     };
 
@@ -72,8 +98,42 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
       lessonTitle: "",
       lessonDescription: "",
       videoUrl: "",
-      duration: 0,
+      duration: "",
       order: formData.syllabus.length + 2,
+    });
+  };
+
+  const addBatch = () => {
+    if (!batchForm.batchName.trim() || !batchForm.startDate) {
+      alert("Please enter batch name and start date");
+      return;
+    }
+
+    const newBatch = {
+      batchName: batchForm.batchName,
+      startDate: new Date(batchForm.startDate),
+      endDate: batchForm.endDate ? new Date(batchForm.endDate) : null,
+      isActive: batchForm.isActive,
+    };
+
+    setFormData({
+      ...formData,
+      batches: [...formData.batches, newBatch],
+    });
+
+    setBatchForm({
+      batchName: "",
+      startDate: "",
+      endDate: "",
+      isActive: true,
+    });
+  };
+
+  const removeBatch = (index) => {
+    const updatedBatches = formData.batches.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      batches: updatedBatches,
     });
   };
 
@@ -316,6 +376,107 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
         )}
       </div>
 
+      {/* Batches Section */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Course Batches
+        </label>
+
+        {/* Add Batch Form */}
+        <div className="bg-gray-50 dark:bg-slate-800 p-4 rounded-2xl mb-4 space-y-3">
+          <input
+            type="text"
+            name="batchName"
+            value={batchForm.batchName}
+            onChange={handleBatchChange}
+            placeholder="Batch Name (e.g., Batch 1)"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                Start Date *
+              </label>
+              <input
+                type="date"
+                name="startDate"
+                value={batchForm.startDate}
+                onChange={handleBatchChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                End Date (optional)
+              </label>
+              <input
+                type="date"
+                name="endDate"
+                value={batchForm.endDate}
+                onChange={handleBatchChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="isActive"
+              checked={batchForm.isActive}
+              onChange={handleBatchChange}
+              className="w-4 h-4"
+            />
+            <label className="text-sm text-gray-700 dark:text-gray-300">
+              Active Batch
+            </label>
+          </div>
+          <button
+            type="button"
+            onClick={addBatch}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors"
+          >
+            Add Batch
+          </button>
+        </div>
+
+        {/* Batches List */}
+        {formData.batches.length > 0 && (
+          <div className="space-y-2">
+            {formData.batches.map((batch, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between bg-white dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600"
+              >
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {batch.batchName}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Starts: {new Date(batch.startDate).toLocaleDateString()}
+                    {batch.endDate &&
+                      ` • Ends: ${new Date(
+                        batch.endDate
+                      ).toLocaleDateString()}`}
+                    {batch.isActive && (
+                      <span className="ml-2 px-2 py-0.5 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">
+                        Active
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeBatch(index)}
+                  className="text-red-600 hover:text-red-700 font-medium"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Form Actions */}
       <div className="flex gap-4 pt-4">
         <button
@@ -338,4 +499,3 @@ const CourseForm = ({ course, onSubmit, onCancel, loading }) => {
 };
 
 export default CourseForm;
-
