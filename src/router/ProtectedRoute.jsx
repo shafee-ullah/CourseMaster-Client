@@ -8,10 +8,10 @@ import { authAPI } from "../services/api";
  * Handles role-based access control
  */
 const ProtectedRoute = ({ children, requiredRole = null }) => {
-  const { user } = useContext(AuthContext);
+  const { user, loading: authLoading } = useContext(AuthContext);
   const location = useLocation();
   const [userRole, setUserRole] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -23,18 +23,23 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
           console.error("Failed to fetch user role:", error);
           setUserRole("student"); // Default to student on error
         } finally {
-          setLoading(false);
+          setRoleLoading(false);
         }
       } else {
-        setLoading(false);
+        setRoleLoading(false);
       }
     };
 
-    fetchUserRole();
-  }, [user]);
+    // Only fetch role if auth is done loading and user exists
+    if (!authLoading) {
+      fetchUserRole();
+    } else {
+      setRoleLoading(true);
+    }
+  }, [user, authLoading]);
 
-  // Show loading state while fetching user role
-  if (loading) {
+  // Show loading state while auth or role is loading
+  if (authLoading || roleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

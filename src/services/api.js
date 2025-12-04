@@ -278,6 +278,22 @@ export const enrollmentAPI = {
     });
     return response.data;
   },
+
+  /**
+   * Admin: Get enrollments by course
+   */
+  getEnrollmentsByCourse: async (courseId, firebaseUID, email) => {
+    const headers = {};
+    if (firebaseUID) {
+      headers["x-firebase-uid"] = firebaseUID;
+    } else if (email) {
+      headers["x-user-email"] = email;
+    }
+    const response = await api.get(`/enrollments/admin/course/${courseId}`, {
+      headers,
+    });
+    return response.data;
+  },
 };
 
 /**

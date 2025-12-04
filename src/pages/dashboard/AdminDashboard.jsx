@@ -9,7 +9,7 @@ import {
 } from "../../services/api";
 import CourseForm from "../courses/CourseForm";
 import toast from "react-hot-toast";
-import { Plus, Edit, Trash2, BookOpen } from "lucide-react";
+import { Plus, Edit, Trash2, BookOpen, Users, Clock } from "lucide-react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -45,6 +45,9 @@ const AdminDashboard = () => {
   const [enrollmentStats, setEnrollmentStats] = useState([]);
   const [enrollmentStatsLoading, setEnrollmentStatsLoading] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [enrollmentManagerCourse, setEnrollmentManagerCourse] = useState(null);
+  const [courseEnrollments, setCourseEnrollments] = useState([]);
+  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -340,6 +343,24 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchCourseEnrollments = async (course) => {
+    try {
+      setCourseEnrollmentsLoading(true);
+      setEnrollmentManagerCourse(course);
+      const res = await enrollmentAPI.getEnrollmentsByCourse(
+        course._id,
+        user?.uid || null,
+        user?.email || null
+      );
+      setCourseEnrollments(res.data || []);
+    } catch (error) {
+      console.error("Failed to load enrollments for course:", error);
+      toast.error("Failed to load enrollments for this course");
+    } finally {
+      setCourseEnrollmentsLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -607,13 +628,22 @@ const AdminDashboard = () => {
                             </button>
                           </div>
                         </div>
-                        <button
-                          onClick={() => fetchCourseQuizzes(course)}
-                          className="w-full mt-1 text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-3 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-2"
-                        >
-                          <BookOpen className="w-4 h-4" />
-                          Manage Quizzes
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => fetchCourseQuizzes(course)}
+                            className="flex-1 text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-3 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-2"
+                          >
+                            <BookOpen className="w-4 h-4" />
+                            Manage Quizzes
+                          </button>
+                          <button
+                            onClick={() => fetchCourseEnrollments(course)}
+                            className="flex-1 text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-3 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Users className="w-4 h-4" />
+                            View Enrollments
+                          </button>
+                        </div>
                       </div>
                       {course.syllabus && course.syllabus.length > 0 && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -943,6 +973,118 @@ const AdminDashboard = () => {
                   Submitted at:{" "}
                   {new Date(selectedAssignment.createdAt).toLocaleString()}
                 </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Enrollment Manager Modal */}
+        {enrollmentManagerCourse && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Enrollment Management
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Course: {enrollmentManagerCourse.title}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEnrollmentManagerCourse(null);
+                    setCourseEnrollments([]);
+                  }}
+                  className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:underline"
+                >
+                  Close
+                </button>
+              </div>
+
+              {courseEnrollmentsLoading ? (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Loading enrollments...
+                </p>
+              ) : courseEnrollments.length === 0 ? (
+                <p className="text-gray-600 dark:text-gray-400">
+                  No students enrolled in this course yet.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      Total Enrollments: {courseEnrollments.length}
+                    </p>
+                  </div>
+                  {courseEnrollments.map((enrollment) => (
+                    <div
+                      key={enrollment._id}
+                      className="bg-gray-50 dark:bg-slate-700 rounded-2xl p-4 border border-gray-200 dark:border-gray-600"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-900 dark:text-white">
+                            {enrollment.student?.displayName ||
+                              enrollment.student?.email ||
+                              "Unknown Student"}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {enrollment.student?.email}
+                          </p>
+                        </div>
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${
+                            enrollment.status === "completed"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                              : enrollment.status === "active"
+                              ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                              : "bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-200"
+                          }`}
+                        >
+                          {enrollment.status}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="w-4 h-4 text-gray-500" />
+                          <span className="text-gray-600 dark:text-gray-400">
+                            Progress: {enrollment.progress || 0}%
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Lessons: {enrollment.completedLessonsCount || 0} /{" "}
+                          {enrollment.totalLessons || 0}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Enrolled:{" "}
+                          {new Date(enrollment.enrolledAt).toLocaleDateString()}
+                        </div>
+                        {enrollment.completedAt && (
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            Completed:{" "}
+                            {new Date(
+                              enrollment.completedAt
+                            ).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="mt-3">
+                        <div className="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+                          <div
+                            className="bg-red-600 h-2 rounded-full transition-all"
+                            style={{
+                              width: `${enrollment.progress || 0}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
