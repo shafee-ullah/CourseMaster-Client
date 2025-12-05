@@ -9,6 +9,7 @@ import QuizPage from "../pages/quizzes/QuizPage.jsx";
 import AdminDashboard from "../pages/dashboard/AdminDashboard.jsx";
 import StudentDashboard from "../pages/dashboard/StudentDashboard.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import AboutPage from "../pages/AboutUS/AboutPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "courses/:id",
         element: <CourseDetails />,
+      },
+      {
+        path: "about",
+        element: <AboutPage/>,
       },
       {
         path: "player/:enrollmentId",

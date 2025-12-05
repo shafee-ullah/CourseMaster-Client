@@ -144,13 +144,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        className="w-full max-w-md"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full flex flex-col items-center">
+        <motion.div
+          className="w-full max-w-md"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
         <motion.div
           className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8"
           variants={itemVariants}
@@ -304,7 +305,17 @@ const Login = () => {
             </p>
           </motion.div>
         </motion.div>
-      </motion.div>
+        </motion.div>
+
+        <div className="w-full max-w-md mt-4 text-center">
+          <button
+            onClick={() => navigate("/")}
+            className="inline-flex items-center justify-center px-4 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 transition-colors"
+          >
+            ← Return to Home
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

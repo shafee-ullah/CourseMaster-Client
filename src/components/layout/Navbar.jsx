@@ -1,15 +1,18 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../context/AuthContext";
-import { Menu, X, User, LogOut, BookOpen, Settings } from "lucide-react";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Menu, X, User, LogOut, BookOpen, Settings, Moon, Sun } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase.init";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { user, setUser } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -27,11 +30,15 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/courses", label: "Courses" },
+    { path: "/about", label: "About Us" },
   ];
 
+  // Hide navbar on the login page
+  if (location && location.pathname === "/login") return null;
+
   return (
-    <nav className="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-50">
-      <div className="app-container">
+    <nav className="md:fixed md:top-0 md:left-0 md:right-0 bg-white dark:bg-slate-800 shadow-md z-50">
+      <div className="w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
@@ -56,6 +63,19 @@ const Navbar = () => {
 
           {/* User Menu */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )}
+            </button>
+
             {user ? (
               <>
                 <Link
@@ -97,16 +117,31 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-gray-700 dark:text-gray-300"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-gray-700 dark:text-gray-300"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
