@@ -388,11 +388,11 @@ const AdminDashboard = () => {
               Manage your courses, quizzes, assignments, and analytics
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {!showForm && (
               <button
                 onClick={() => setShowForm(true)}
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-2xl transition-colors"
+                className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-2xl transition-colors w-full sm:w-auto"
               >
                 <Plus className="w-5 h-5" />
                 Create Course
@@ -401,7 +401,7 @@ const AdminDashboard = () => {
             {!showQuizForm && (
               <button
                 onClick={openQuizFormForCreate}
-                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-2xl transition-colors"
+                className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-2xl transition-colors w-full sm:w-auto"
               >
                 <Plus className="w-5 h-5" />
                 Create Quiz
