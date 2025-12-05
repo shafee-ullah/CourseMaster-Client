@@ -124,7 +124,7 @@ const CareerOpportunities = () => {
               ))}
             </div>
 
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -138,7 +138,7 @@ const CareerOpportunities = () => {
                 <span>View All Positions</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
-            </motion.div>
+            </motion.div> */}
           </div>
 
           {/* Benefits & Culture */}
@@ -199,7 +199,7 @@ const CareerOpportunities = () => {
         </div>
 
         {/* Call to Action */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -231,7 +231,7 @@ const CareerOpportunities = () => {
               </Link>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
