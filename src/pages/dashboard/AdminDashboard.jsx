@@ -47,7 +47,8 @@ const AdminDashboard = () => {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [enrollmentManagerCourse, setEnrollmentManagerCourse] = useState(null);
   const [courseEnrollments, setCourseEnrollments] = useState([]);
-  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] = useState(false);
+  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] =
+    useState(false);
 
   useEffect(() => {
     if (user) {
@@ -379,7 +380,7 @@ const AdminDashboard = () => {
         className="space-y-6"
       >
         {/* Header */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Admin Dashboard
@@ -389,6 +390,40 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
+            {!showForm && (
+              <button
+                onClick={() => setShowForm(true)}
+                className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-2xl transition-colors w-full sm:w-auto"
+              >
+                <Plus className="w-5 h-5" />
+                Create Course
+              </button>
+            )}
+            {!showQuizForm && (
+              <button
+                onClick={openQuizFormForCreate}
+                className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-2xl transition-colors w-full sm:w-auto"
+              >
+                <Plus className="w-5 h-5" />
+                Create Quiz
+              </button>
+            )}
+          </div>
+        </div> */}
+
+        <div className="w-full">
+          {/* Title & Description */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Manage your courses, quizzes, assignments, and analytics
+            </p>
+          </div>
+
+          {/* Buttons - Stack on mobile, align right on sm+ screens */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
             {!showForm && (
               <button
                 onClick={() => setShowForm(true)}
