@@ -321,12 +321,13 @@ Create a `.env` file in the root directory:
 VITE_API_URL=http://localhost:5000/api
 
 # Firebase Configuration
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+VITE_apiKey=your_firebase_api_key
+VITE_authDomain=your_auth_domain
+VITE_projectId=your_project_id
+VITE_storageBucket=your_storage_bucket
+VITE_messagingSenderId=your_messaging_sender_id
+VITE_appId=your_app_id
+VITE_API_URL=your_api_url
 ```
 
 4️⃣ **Start the development server**
@@ -356,14 +357,13 @@ Navigate to `http://localhost:5174` 🎉
 <div align="center">
 
 ### CourseMaster Platform
-![CourseMaster Platform](./src/assets/coursemaster.png)
+![CourseMaster Platform](./src/assets/cm%20homepage.png)
 
 *Modern, intuitive interface with course browsing and filtering capabilities*
 
-### Admin Dashboard
-![Admin Dashboard](./src/assets/cm%20homepage.png)
+### Courses
+![Courses](./src/assets/coursemaster.png)
 
-*Comprehensive admin dashboard with analytics and course management*
 
 </div>
 
