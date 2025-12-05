@@ -101,12 +101,12 @@ const LearningTimelineSection = () => {
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.3 }}
                       animate={{ 
                         rotate: [0, 360],
                         scale: [1, 1.1, 1]
                       }}
                       transition={{ 
+                        delay: index * 0.3,
                         rotate: { duration: 20, repeat: Infinity, ease: "linear" },
                         scale: { duration: 2, repeat: Infinity }
                       }}

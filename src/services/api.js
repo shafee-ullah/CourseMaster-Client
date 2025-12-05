@@ -5,10 +5,10 @@ import axios from "axios";
  * Centralized axios instance for API calls
  */
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "/api";
+  import.meta.env.VITE_API_URL || "https://course-master-wheat.vercel.app";
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${API_BASE_URL}/api`,
   headers: {
     "Content-Type": "application/json",
   },
